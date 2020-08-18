@@ -23,6 +23,8 @@ namespace CrmBL.Model {
 
         public int Count => Queue.Count;
 
+        public event EventHandler<Check> CheckClosed;
+
         public CashDesk(int number, Seller seller) {
             Number = number;
             Seller = seller;
@@ -82,12 +84,15 @@ namespace CrmBL.Model {
                         product.Count--;
                         sum += product.Price;
                     }
-
                 }
+
+                check.Price = sum;
 
                 if (!isModel) {
                     db.SaveChanges();
                 }
+
+                CheckClosed?.Invoke(this, check);
             }
 
             return sum;
