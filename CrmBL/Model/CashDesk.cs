@@ -30,6 +30,7 @@ namespace CrmBL.Model {
             Seller = seller;
             Queue = new Queue<Cart>();
             isModel = true;
+            MaxQueueLength = 10;
         }
 
         public void Enqueue(Cart cart) {
@@ -94,8 +95,11 @@ namespace CrmBL.Model {
 
                 CheckClosed?.Invoke(this, check);
             }
-
             return sum;
+        }
+
+        public override string ToString() {
+            return $"Касса №{Number}";
         }
     }
 }
