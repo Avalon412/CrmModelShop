@@ -10,9 +10,6 @@ namespace CrmBL.Model {
         Generator generator = new Generator();
         Random rnd = new Random();
         bool isWorking = false;
-        List<Task> tasks = new List<Task>();
-        CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
-        CancellationToken token;
 
         public List<CashDesk> CashDesks { get; set; } = new List<CashDesk>();
         public List<Cart> Carts { get; set; } = new List<Cart>();
@@ -27,7 +24,6 @@ namespace CrmBL.Model {
             var sellers = generator.GetNewSellers(20);
             generator.GetNewProducts(1000);
             generator.GetNewCustomers(100);
-            token = cancelTokenSource.Token;
 
             foreach (var seller in sellers) {
                 Sellers.Enqueue(seller);
@@ -38,19 +34,21 @@ namespace CrmBL.Model {
             }
         }
 
-        public void Start() {            
-            tasks.Add(Task.Run(() => CreateCarts(10, token)));
-            tasks.AddRange(CashDesks.Select(c => new Task(() => CashDeskWork(c, token))));
-            foreach(var task in tasks) {
+        public void Start() {
+            isWorking = true;
+            Task.Run(() => CreateCarts(10));
+
+            var cashDeskTasks = CashDesks.Select(c => new Task(() => CashDeskWork(c)));
+            foreach(var task in cashDeskTasks) {
                 task.Start();
             }
         }
 
         public void Stop() {
-            cancelTokenSource.Cancel();
+            isWorking = false;
         }
 
-        private void CashDeskWork(CashDesk cashDesk, CancellationToken token) {
+        private void CashDeskWork(CashDesk cashDesk) {
             while (isWorking) {
                 if(cashDesk.Count > 0) {
                     cashDesk.Dequeue();
@@ -59,8 +57,8 @@ namespace CrmBL.Model {
             }
         }
 
-        private void CreateCarts(int customerCounts, CancellationToken token) {
-            while (!token.IsCancellationRequested) {
+        private void CreateCarts(int customerCounts) {
+            while (isWorking) {
                 var customers = generator.GetNewCustomers(customerCounts);
                 var carts = new Queue<Cart>();
 
