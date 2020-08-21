@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -33,7 +34,7 @@ namespace CrmUi {
         }
 
         private void ModelForm_FormClosing(object sender, FormClosingEventArgs e) {
-            model.Stop();
+            model.Stop();            
         }
 
         private void ModelForm_Load(object sender, EventArgs e) {

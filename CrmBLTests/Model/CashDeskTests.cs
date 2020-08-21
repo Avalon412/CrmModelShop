@@ -51,7 +51,7 @@ namespace CrmBL.Model.Tests {
             cart2.Add(product2);
             cart2.Add(product2);
 
-            var cashDesk = new CashDesk(1, seller);
+            var cashDesk = new CashDesk(1, seller, null);
             cashDesk.MaxQueueLength = 10;
             cashDesk.Enqueue(cart1);
             cashDesk.Enqueue(cart2);

@@ -14,7 +14,7 @@ namespace CrmBL.Model {
         public virtual ICollection<Sell> Sells { get; set; }
 
         public override string ToString() {
-            return Name;
+            return $"{Name} - {Price}";
         }
 
         public override int GetHashCode() {

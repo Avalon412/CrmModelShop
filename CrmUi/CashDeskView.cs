@@ -59,11 +59,13 @@ namespace CrmUi {
         }
 
         private void CashDesk_CheckClosed(object sender, Check e) {
-            Price.Invoke((Action)delegate {
-                Price.Value += e.Price;
-                QueueLength.Value = cashDesk.Count;
-                LeaveCustomersCount.Text = cashDesk.ExitCustomer.ToString();
-            });
+            if(!Price.IsDisposed) {
+                Price.Invoke((Action)delegate {
+                    Price.Value += e.Price;
+                    QueueLength.Value = cashDesk.Count;
+                    LeaveCustomersCount.Text = cashDesk.ExitCustomer.ToString();
+                });
+            }
         }
     }
 }
